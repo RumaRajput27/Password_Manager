@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Password Manager</title>
+	<link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+    <h1>Password Manager</h1>
+
+    <input type="text" id="title" placeholder="Enter Title" />
+    <input type="password" id="password" placeholder="Enter Password" />
+    <button id="saveBtn" onclick="savePassword()">Save Password</button>
+    <div id="saveStatus"></div>
+
+    <h2>Saved Passwords</h2>
+    <div id="passwords"></div>
+
+
+    <script>
+      let editingId = null;
+
+      async function savePassword() {
+        const title = document.getElementById("title").value;
+        const password = document.getElementById("password").value;
+
+        if (editingId) {
+          // If we are editing an existing entry, send a PUT request
+          await updatePassword(editingId, title, password);
+        } else {
+          // Otherwise, save a new password
+          await createPassword(title, password);
+        }
+
+        document.getElementById("title").value = '';
+        document.getElementById("password").value = '';
+        editingId = null; // Reset after saving
+        document.getElementById("saveBtn").innerText = 'Save Password'; // Change button text back
+        loadPasswords();
+      }
+
+      async function createPassword(title, password) {
+        try {
+          const response = await fetch("http://localhost:3000/save-password", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title, password }),
+          });
+
+          if (response.ok) {
+            document.getElementById("saveStatus").innerText =
+              "Password saved successfully";
+          } else {
+            document.getElementById("saveStatus").innerText = "Error saving password";
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+
+      async function loadPasswords() {
+        try {
+          const response = await fetch("http://localhost:3000/passwords");
+          const passwords = await response.json();
+
+          const passwordsDiv = document.getElementById("passwords");
+          passwordsDiv.innerHTML = ""; // Clear previous passwords
+
+          passwords.forEach((entry, index) => {
+            const passwordItem = document.createElement("div");
+            passwordItem.innerHTML = `${index + 1}. Title: ${entry.title}, Password: ${entry.password}`;
+            
+            const editBtn = document.createElement("button");
+            editBtn.innerText = "Edit";
+            editBtn.onclick = () => editPassword(entry.id, entry.title, entry.password);
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.innerText = "Delete";
+            deleteBtn.onclick = () => deletePassword(entry.id);
+
+            passwordItem.appendChild(editBtn);
+            passwordItem.appendChild(deleteBtn);
+
+            passwordsDiv.appendChild(passwordItem);
+          });
+        } catch (error) {
+          console.error("Error fetching passwords:", error);
+        }
+      }
+
+      async function editPassword(id, title, password) {
+        document.getElementById("title").value = title;
+        document.getElementById("password").value = password;
+        editingId = id; // Set editingId to the current password's ID
+        document.getElementById("saveBtn").innerText = "Update Password"; // Change button text
+      }
+
+      async function updatePassword(id, title, password) {
+        try {
+          const response = await fetch(`http://localhost:3000/update-password/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title, password }),
+          });
+
+          if (response.ok) {
+            document.getElementById("saveStatus").innerText = "Password updated successfully";
+          } else {
+            document.getElementById("saveStatus").innerText = "Error updating password";
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+
+      async function deletePassword(id) {
+        try {
+          const response = await fetch(`http://localhost:3000/delete-password/${id}`, {
+            method: "DELETE",
+          });
+
+          if (response.ok) {
+            document.getElementById("saveStatus").innerText = "Password deleted successfully";
+            loadPasswords(); // Reload the password list
+          } else {
+            document.getElementById("saveStatus").innerText = "Error deleting password";
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+
+      // Load passwords on page load
+      window.onload = loadPasswords;
+    </script>
+  </body>
+</html>

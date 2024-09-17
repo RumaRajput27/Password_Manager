@@ -1,0 +1,117 @@
+/* index.css */
+
+/* General styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #e3f2fd; /* Light blue background */
+  color: #333;
+  padding: 20px;
+  margin: 0;
+}
+
+h1, h2 {
+  text-align: center;
+  color: #1a237e; /* Dark blue for headings */
+  text-shadow: 1px 1px 2px #4fc3f7; /* Light blue text shadow */
+}
+
+input[type="text"], input[type="password"] {
+  width: 250px;
+  padding: 10px;
+  margin: 5px;
+  border: 2px solid #4caf50; /* Green border */
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 15px;
+  margin: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth hover transition */
+}
+
+#saveBtn {
+  background-color: #1976d2; /* Blue button */
+  color: white;
+}
+
+#saveBtn:hover {
+  background-color: #1565c0; /* Darker blue on hover */
+}
+
+#saveStatus {
+  margin-top: 10px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #4caf50; /* Green background */
+  border-radius: 5px;
+  text-align: center;
+}
+
+#passwords {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Saved password entry styles */
+.password-item {
+  padding: 15px;
+  background-color: #ffeb3b; /* Yellow background */
+  border: 2px solid #fbc02d; /* Darker yellow border */
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.password-item span {
+  font-weight: bold;
+  color: #424242; /* Dark grey for text */
+}
+
+.password-item button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.password-item button.edit-btn {
+  background-color: #66bb6a; /* Light green for edit */
+  color: white;
+}
+
+.password-item button.edit-btn:hover {
+  background-color: #4caf50; /* Darker green on hover */
+}
+
+.password-item button.delete-btn {
+  background-color: #f44336; /* Red for delete */
+  color: white;
+}
+
+.password-item button.delete-btn:hover {
+  background-color: #d32f2f; /* Darker red on hover */
+}
+
+/* Button hover transitions */
+button:hover {
+  opacity: 0.9;
+}
+
+/* Footer style */
+footer {
+  margin-top: 50px;
+  text-align: center;
+  color: #666;
+  font-size: 12px;
+}
